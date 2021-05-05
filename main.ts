@@ -13,36 +13,6 @@ function clrColors () {
     blue = 0
     white = 0
 }
-radio.onReceivedString(function (receivedString) {
-    if (receivedString == "Down") {
-        if (angle > 0) {
-            angle += -1
-            DFRobotMaqueenPlus.servoRun(Servos.S1, angle)
-        }
-    } else if (receivedString == "Up") {
-        if (angle < 180) {
-            angle += 1
-            DFRobotMaqueenPlus.servoRun(Servos.S1, angle)
-        }
-    } else if (receivedString == "LEDG") {
-        clrColors()
-        green = 1
-    } else if (receivedString == "LEDY") {
-        clrColors()
-        yellow = 1
-    } else if (receivedString == "LEDR") {
-        clrColors()
-        red = 1
-    } else if (receivedString == "LEDB") {
-        clrColors()
-        blue = 1
-    } else if (receivedString == "LEDW") {
-        clrColors()
-        white = 1
-    } else {
-        DFRobotMaqueenPlus.mototStop(Motors.ALL)
-    }
-})
 function flashYel () {
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBL, Color.YELLOW)
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBR, Color.OFF)
@@ -51,13 +21,6 @@ function flashYel () {
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBR, Color.YELLOW)
     basic.pause(200)
 }
-radio.onReceivedValue(function (name, value) {
-    if (name == "joyH") {
-        joyH = value
-    } else if (name == "B") {
-        joyV = value
-    }
-})
 function flashBlue () {
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBL, Color.BLUE)
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBR, Color.OFF)
@@ -74,6 +37,8 @@ function flashRed3 () {
     DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBR, Color.RED)
     basic.pause(150)
 }
+let motorRspeed = 0
+let motorLspeed = 0
 let joyV = 0
 let joyH = 0
 let white = 0
@@ -81,14 +46,14 @@ let blue = 0
 let red = 0
 let yellow = 0
 let green = 0
-let angle = 0
-radio.setGroup(1)
-angle = 90
-let motorLspeed = 0
-let motorRspeed = 0
+let angle = 90
 DFRobotMaqueenPlus.servoRun(Servos.S1, angle)
 DFRobotMaqueenPlus.setRGBLight(RGBLight.RGBA, Color.WHITH)
 music.playTone(262, music.beat(BeatFraction.Whole))
+basic.forever(function () {
+    joyH = Math.map(pins.pulseIn(DigitalPin.P1, PulseValue.High), 1000, 2000, 0, 1023)
+    joyV = Math.map(pins.pulseIn(DigitalPin.P2, PulseValue.High), 1000, 2000, 0, 1023)
+})
 basic.forever(function () {
     if (joyV > 550) {
         motorLspeed = Math.map(joyV, 550, 1023, 10, 255)
